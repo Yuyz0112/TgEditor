@@ -1,26 +1,55 @@
+/*clearfix-浮动清理*/
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden
+}
+.clearfix {
+  display: inline-block
+}
+* html .clearfix {
+  height: 1%
+}
+.clearfix {
+  display: block
+}
 body {
-  font-family: 'Helvetica', 'Arial', san-serif;
+  font-family: 'Microsoft Yahei', 'Helvetica', 'Arial', san-serif;
   font-size: 13px;
   padding: 25px;
+  background-color: #d6dfec;
 }
 #content-container {
   margin: auto;
-  width: 960px;
+  width: 1200px;
 }
 #formatting-container {
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #ccc;
+  background-color: #acc0d6;
+  border-bottom: 1px solid #23334e;
   padding: 5px 12px;
 }
-#formatting-container .ql-active,
-#formatting-container button:hover {
-  color: #008000;
+#formatting-container .ql-active, #formatting-container button:hover, #formatting-container span:hover {
+  color: #23334e;
   font-weight: bold;
 }
 #editor-container {
-  height: 600px;
+  float: left;
+  width: 599px;
+  height: 700px;
+  border-right: 1px solid #23334e;
 }
 #editor-wrapper {
-  border: 1px solid #aaa;
-  box-shadow: 0 0 2px 2px #ddd;
+  border: 1px solid #23334e;
+  box-shadow: 0 0 2px 2px #8492bd;
+  background-color: #fdfefe;
+}
+#editor-container p {
+  /*text-indent: 2em;*/
+}
+#html-container {
+  float: left;
+  width: 599px;
+  height: 700px;
 }

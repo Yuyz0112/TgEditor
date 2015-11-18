@@ -1,0 +1,19 @@
+{
+  "name": "tg-editor",
+  "version": "1.0.0",
+  "description": "A rich text editor based on Quill",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aryu",
+  "license": "MIT",
+  "devDependencies": {
+    "browser-sync": "^2.10.0",
+    "gulp": "^3.9.0"
+  },
+  "dependencies": {
+    "browser-sync": "^2.10.0",
+    "gulp": "^3.9.0"
+  }
+}
