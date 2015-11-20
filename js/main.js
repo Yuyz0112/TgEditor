@@ -1,6 +1,5 @@
 /*Initialize the Quill*/
 var editor = new Quill('#editor-container', {
-  //formats:['bold', 'italic', 'color'],
   modules: {
     'toolbar': {
       container: '#formatting-container'
@@ -8,7 +7,8 @@ var editor = new Quill('#editor-container', {
     'link-tooltip': true,
     'image-tooltip': true
   },
-  theme: 'snow'
+  theme: 'snow',
+  //formats: ['head']
 });
 var showroom = new Quill('#html-container', {
 
@@ -17,7 +17,7 @@ var showroom = new Quill('#html-container', {
 /*Trans text into html*/
 function textToHtml() {
   var html = editor.getHTML();
-  html = style_html(html, 0, '\t', 0);
+  html = style_html(html, 0, '', 0);
   showroom.setText(html);
 }
 
@@ -39,6 +39,18 @@ showroom.on('text-change', function() {
   }
 })
 
+/*Bind hot-keys (Not prototype method)*/
+editor.on('selection-change',function(range){
+  if (range) {
+    var text = editor.getText(range);
+    /*
+    editor.formatText(range.start, range.end, {
+      'header5':true,
+      'color':'rgb(0,0,255)'
+    })*/
+    //console.log(text); 
+  }
+})
 
 $(function() {
   /*Find which container is focused*/
@@ -51,18 +63,18 @@ $(function() {
 
   /*Clean the text's format*/
   $('.ql-clean').click(function() {
-    $('#ql-editor-1').find('*').attr('style', '').find('a').contents().unwrap();
+    $('#ql-editor-1').find('*').removeAttr('style').removeAttr('class').find('a').contents().unwrap();
     $('#ql-editor-1').find('b').contents().unwrap();
-    $('#ql-editor-1').find('ul').contents().unwrap();
+    //$('#ql-editor-1').find('ul').contents().unwrap();
     $('#ql-editor-1').find('ol').contents().unwrap();
-    $('#ql-editor-1').find('li').wrap('<p></p>');
-    $('#ql-editor-1').find('li').contents().unwrap('');
+    //$('#ql-editor-1').find('li').wrap('<p></p>');
+    //$('#ql-editor-1').find('li').contents().unwrap('');
     for (var i = 1; i < $('#ql-editor-1').find('p').length + 1; i++) {
       if ($('#ql-editor-1').find('p').eq(i - 1).html() == '&nbsp;') {
         $('#ql-editor-1').find('p').eq(i - 1).remove();
       }
     }
-    $('#ql-editor-1 p br').remove();
+    $('#ql-editor-1 p br').parent().remove();
     editor.setHTML(editor.getHTML());
     textToHtml();
   })

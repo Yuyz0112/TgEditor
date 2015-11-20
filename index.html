@@ -11,26 +11,24 @@
       <div id="editor-wrapper" class="clearfix">
         <div id="formatting-container">
           <span class="ql-format-group">
-            <select title="Font" class="ql-font">
-              <option value="sans-serif">Sans Serif</option>
-              <option value="serif">Serif</option>
-              <option value="Microsoft Yahei" selected="">微软雅黑</option>
-            </select>
             <select title="Size" class="ql-size">
-              <option value="10px">小号</option>
-              <option value="13px" selected="">中号</option>
-              <option value="18px">大号</option>
-              <option value="32px">超大号</option>
+              <option value="48px">一号标题</option>
+              <option value="32px">二号标题</option>
+              <option value="24px">三号标题</option>
+              <option value="18px">四号标题</option>
+              <option value="16px">五号标题</option>
+              <option value="13px">六号标题</option>
+              <option value="14px" selected="">段落</option>
             </select>
           </span>
           <span class="ql-format-group">
-            <span title="粗体" class="ql-format-button ql-bold"></span>
+            <button title="粗体" class="ql-format-button ql-bold"></button>
             <span class="ql-format-separator"></span>
-            <span title="斜体" class="ql-format-button ql-italic"></span>
+            <button title="斜体" class="ql-format-button ql-italic"></button>
             <span class="ql-format-separator"></span>
-            <span title="下划线" class="ql-format-button ql-underline"></span>
+            <button title="下划线" class="ql-format-button ql-underline"></button>
             <span class="ql-format-separator"></span>
-            <span title="删除线" class="ql-format-button ql-strike"></span>
+            <button title="删除线" class="ql-format-button ql-strike"></button>
           </span>
           <span class="ql-format-group">
             <select title="文字颜色" class="ql-color">
@@ -110,9 +108,9 @@
             </select>
           </span>
           <span class="ql-format-group">
-            <span title="有序列表" class="ql-format-button ql-list"></span>
+            <button title="有序列表" class="ql-format-button ql-list"></button>
             <span class="ql-format-separator"></span>
-            <span title="无序列表" class="ql-format-button ql-bullet"></span>
+            <button title="无序列表" class="ql-format-button ql-bullet"></button>
             <span class="ql-format-separator"></span>
             <select title="文字排版" class="ql-align">
               <option value="left" label="Left" selected=""></option>
@@ -136,9 +134,9 @@
         <div id="html-container"></div>
       </div>
     </div>
+    <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="js/quill.js"></script>
     <script type="text/javascript" src="js/htmlformat.js"></script>
-    <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
   </body>
 </html>

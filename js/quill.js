@@ -6565,6 +6565,30 @@ Format = (function() {
       tag: 'B',
       prepare: 'bold'
     },
+    header1: {
+      tag: 'H1',
+      prepare: 'header1'
+    },
+    header2: {
+      tag: 'H2',
+      prepare: 'header2'
+    },
+    header3: {
+      tag: 'H3',
+      prepare: 'header3'
+    },
+    header4: {
+      tag: 'H4',
+      prepare: 'header4'
+    },
+    header5: {
+      tag: 'H5',
+      prepare: 'header5'
+    },
+    header6: {
+      tag: 'H6',
+      prepare: 'header6'
+    },
     italic: {
       tag: 'I',
       prepare: 'italic'
@@ -6594,7 +6618,7 @@ Format = (function() {
     },
     size: {
       style: 'fontSize',
-      "default": '13px',
+      "default": '14px',
       prepare: function(value) {
         return document.execCommand('fontSize', false, dom.convertFontSize(value));
       }
@@ -7222,6 +7246,7 @@ Normalizer = (function() {
       styles: {},
       tags: {}
     };
+    console.log(this.whitelist)
     this.whitelist.tags[dom.DEFAULT_BREAK_TAG] = true;
     this.whitelist.tags[dom.DEFAULT_BLOCK_TAG] = true;
     this.whitelist.tags[dom.DEFAULT_INLINE_TAG] = true;
@@ -8350,12 +8375,6 @@ dom = _.extend(dom, {
     'FIGURE': 'FIGURE',
     'FOOTER': 'FOOTER',
     'FORM': 'FORM',
-    'H1': 'H1',
-    'H2': 'H2',
-    'H3': 'H3',
-    'H4': 'H4',
-    'H5': 'H5',
-    'H6': 'H6',
     'HEADER': 'HEADER',
     'HGROUP': 'HGROUP',
     'LI': 'LI',
@@ -8922,12 +8941,52 @@ Keyboard = (function() {
       key: 'B',
       metaKey: true
     },
+    BULLET: {
+      key: 'U',
+      shiftKey: true,
+      altKey: true
+    },
+    HEADER1: {
+      key: '1',
+      shiftKey: true,
+      altKey: true
+    },
+    HEADER2: {
+      key: '2',
+      shiftKey: true,
+      altKey: true
+    },
+    HEADER3: {
+      key: '3',
+      shiftKey: true,
+      altKey: true
+    },
+    HEADER4: {
+      key: '4',
+      shiftKey: true,
+      altKey: true
+    },
+    HEADER5: {
+      key: '5',
+      shiftKey: true,
+      altKey: true
+    },
+    HEADER6: {
+      key: '6',
+      shiftKey: true,
+      altKey: true
+    },
     INDENT: {
       key: dom.KEYS.TAB
     },
     ITALIC: {
       key: 'I',
       metaKey: true
+    },
+    LIST: {
+      key: 'O',
+      shiftKey: true,
+      altKey: true
     },
     OUTDENT: {
       key: dom.KEYS.TAB,
@@ -8988,21 +9047,29 @@ Keyboard = (function() {
     this.hotkeys[which] = kept;
     return _.map(removed, 'callback');
   };
-
+  var valueCache;
   Keyboard.prototype.toggleFormat = function(range, format) {
-    var delta, value;
+    var delta, value ;
     if (range.isCollapsed()) {
       delta = this.quill.getContents(Math.max(0, range.start - 1), range.end);
     } else {
       delta = this.quill.getContents(range);
     }
-    value = delta.ops.length === 0 || !_.all(delta.ops, function(op) {
-      var ref;
-      return (ref = op.attributes) != null ? ref[format] : void 0;
-    });
     if (range.isCollapsed()) {
+      value = delta.ops.length === 0 || !_.all(delta.ops, function(op) {
+        var ref;
+        return (ref = op.attributes) != null ? ref[format] : void 0;
+      });
       this.quill.prepareFormat(format, value, Quill.sources.USER);
+    } else if ( format == 'bullet' || 'list') {
+      console.log($('.ql-'+format).hasClass('ql-active'))
+      value = !$('.ql-'+format).hasClass('ql-active') ;
+      this.quill.formatLine(range, format, value, Quill.sources.USER);
     } else {
+      value = delta.ops.length === 0 || !_.all(delta.ops, function(op) {
+        var ref;
+        return (ref = op.attributes) != null ? ref[format] : void 0;
+      });
       this.quill.formatText(range, format, value, Quill.sources.USER);
     }
     if (this.toolbar != null) {
@@ -9081,7 +9148,7 @@ Keyboard = (function() {
         return false;
       };
     })(this));
-    _.each(['bold', 'italic', 'underline'], (function(_this) {
+    _.each(['bold', 'bullet', 'italic', 'list','underline', 'header1', 'header2', 'header3', 'header4', 'header5', 'header6'], (function(_this) {
       return function(format) {
         return _this.addHotkey(Keyboard.hotkeys[format.toUpperCase()], function(range) {
           if (_this.quill.editor.doc.formats[format]) {
@@ -9157,7 +9224,7 @@ LinkTooltip = (function(superClass) {
 
   LinkTooltip.DEFAULTS = {
     maxLength: 50,
-    template: '<span class="title">Visit URL:&nbsp;</span> <a href="#" class="url" target="_blank" href="about:blank"></a> <input class="input" type="text"> <span>&nbsp;&#45;&nbsp;</span> <a href="javascript:;" class="change">Change</a> <a href="javascript:;" class="remove">Remove</a> <a href="javascript:;" class="done">Done</a>'
+    template: '<span class="title">添加超链接:&nbsp;</span> <a href="#" class="url" target="_blank" href="about:blank"></a> <input class="input" type="text"> <span>&nbsp;&#45;&nbsp;</span> <a href="javascript:;" class="change">Change</a> <a href="javascript:;" class="remove">Remove</a> <a href="javascript:;" class="done">完成</a>'
   };
 
   LinkTooltip.hotkeys = {
@@ -9634,6 +9701,12 @@ Toolbar = (function() {
     TOGGLE: {
       'bold': 'bold',
       'bullet': 'bullet',
+      'header1': 'header1',
+      'header2': 'header2',
+      'header3': 'header3',
+      'header4': 'header4',
+      'header5': 'header5',
+      'header6': 'header6',
       'image': 'image',
       'italic': 'italic',
       'link': 'link',
@@ -10212,7 +10285,7 @@ Quill = (function(superClass) {
   Quill.themes = [];
 
   Quill.DEFAULTS = {
-    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image', 'bullet', 'list'],
+    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image', 'bullet', 'list', 'header1', 'header2', 'header3', 'header4', 'header5', 'header6'],
     modules: {
       'keyboard': true,
       'paste-manager': true,
@@ -10595,7 +10668,7 @@ module.exports = Quill;
 
 
 },{"../package.json":7,"./core/document":8,"./core/editor":9,"./core/format":10,"./core/normalizer":13,"./lib/dom":17,"./lib/range":20,"./themes/base":32,"./themes/snow":33,"eventemitter2":2,"lodash":1,"rich-text/lib/delta":3}],31:[function(_dereq_,module,exports){
-module.exports = ".ql-image-tooltip{padding:10px;width:300px}.ql-image-tooltip:after{clear:both;content:\"\";display:table}.ql-image-tooltip a{border:1px solid #000;box-sizing:border-box;display:inline-block;float:left;padding:5px;text-align:center;width:50%}.ql-image-tooltip img{bottom:0;left:0;margin:auto;max-height:100%;max-width:100%;position:absolute;right:0;top:0}.ql-image-tooltip .input{box-sizing:border-box;width:100%}.ql-image-tooltip .preview{margin:10px 0;position:relative;border:1px dashed #000;height:200px}.ql-image-tooltip .preview span{display:inline-block;position:absolute;text-align:center;top:40%;width:100%}.ql-link-tooltip{padding:5px 10px}.ql-link-tooltip input.input{width:170px}.ql-link-tooltip a.done,.ql-link-tooltip input.input{display:none}.ql-link-tooltip a.change{margin-right:4px}.ql-link-tooltip.editing a.done,.ql-link-tooltip.editing input.input{display:inline-block}.ql-link-tooltip.editing a.change,.ql-link-tooltip.editing a.remove,.ql-link-tooltip.editing a.url{display:none}.ql-multi-cursor{position:absolute;left:0;top:0;z-index:1000}.ql-multi-cursor .cursor{margin-left:-1px;position:absolute}.ql-multi-cursor .cursor-flag{bottom:100%;position:absolute;white-space:nowrap}.ql-multi-cursor .cursor-name{display:inline-block;color:#fff;padding:2px 8px}.ql-multi-cursor .cursor-caret{height:100%;position:absolute;width:2px}.ql-multi-cursor .cursor.hidden .cursor-flag{display:none}.ql-multi-cursor .cursor.top .cursor-flag{bottom:auto;top:100%}.ql-multi-cursor .cursor.right .cursor-flag{right:-2px}.ql-paste-manager{left:-100000px;position:absolute;top:50%}.ql-toolbar{box-sizing:border-box}.ql-tooltip{background-color:#fff;border:1px solid #000;box-sizing:border-box;position:absolute;top:0;white-space:nowrap;z-index:2000}.ql-tooltip a{cursor:pointer;text-decoration:none}.ql-container{box-sizing:border-box;cursor:text;font-family:Helvetica,Arial,sans-serif;font-size:13px;height:100%;line-height:1.42;margin:0;overflow-x:hidden;overflow-y:auto;padding:12px 15px;position:relative}.ql-editor{box-sizing:border-box;min-height:100%;outline:0;tab-size:4;white-space:pre-wrap}.ql-editor div{margin:0;padding:0}.ql-editor a{text-decoration:underline}.ql-editor b{font-weight:700}.ql-editor i{font-style:italic}.ql-editor s{text-decoration:line-through}.ql-editor u{text-decoration:underline}.ql-editor a,.ql-editor b,.ql-editor i,.ql-editor s,.ql-editor span,.ql-editor u{background-color:inherit}.ql-editor img{max-width:100%}.ql-editor blockquote,.ql-editor ol,.ql-editor ul{margin:0 0 0 2em;padding:0}.ql-editor ol{list-style-type:decimal}.ql-editor ul{list-style-type:disc}.ql-editor.ql-ie-10 br,.ql-editor.ql-ie-9 br{display:none}";
+module.exports = ".ql-image-tooltip{padding:10px;width:300px}.ql-image-tooltip:after{clear:both;content:\"\";display:table}.ql-image-tooltip a{border:1px solid #000;box-sizing:border-box;display:inline-block;float:left;padding:5px;text-align:center;width:50%}.ql-image-tooltip img{bottom:0;left:0;margin:auto;max-height:100%;max-width:100%;position:absolute;right:0;top:0}.ql-image-tooltip .input{box-sizing:border-box;width:100%}.ql-image-tooltip .preview{margin:10px 0;position:relative;border:1px dashed #000;height:200px}.ql-image-tooltip .preview span{display:inline-block;position:absolute;text-align:center;top:40%;width:100%}.ql-link-tooltip{padding:5px 10px}.ql-link-tooltip input.input{width:170px}.ql-link-tooltip a.done,.ql-link-tooltip input.input{display:none}.ql-link-tooltip a.change{margin-right:4px}.ql-link-tooltip.editing a.done,.ql-link-tooltip.editing input.input{display:inline-block}.ql-link-tooltip.editing a.change,.ql-link-tooltip.editing a.remove,.ql-link-tooltip.editing a.url{display:none}.ql-multi-cursor{position:absolute;left:0;top:0;z-index:1000}.ql-multi-cursor .cursor{margin-left:-1px;position:absolute}.ql-multi-cursor .cursor-flag{bottom:100%;position:absolute;white-space:nowrap}.ql-multi-cursor .cursor-name{display:inline-block;color:#fff;padding:2px 8px}.ql-multi-cursor .cursor-caret{height:100%;position:absolute;width:2px}.ql-multi-cursor .cursor.hidden .cursor-flag{display:none}.ql-multi-cursor .cursor.top .cursor-flag{bottom:auto;top:100%}.ql-multi-cursor .cursor.right .cursor-flag{right:-2px}.ql-paste-manager{left:-100000px;position:absolute;top:50%}.ql-toolbar{box-sizing:border-box}.ql-tooltip{background-color:#fff;border:1px solid #000;box-sizing:border-box;position:absolute;top:0;white-space:nowrap;z-index:2000}.ql-tooltip a{cursor:pointer;text-decoration:none}.ql-container{box-sizing:border-box;cursor:text;font-family:Helvetica,Arial,sans-serif;font-size:14px;height:100%;line-height:1.42;margin:0;overflow-x:hidden;overflow-y:auto;padding:12px 15px;position:relative}.ql-editor{box-sizing:border-box;min-height:100%;outline:0;tab-size:4;white-space:pre-wrap}.ql-editor div{margin:0;padding:0}.ql-editor a{text-decoration:underline}.ql-editor b{font-weight:700}.ql-editor i{font-style:italic}.ql-editor s{text-decoration:line-through}.ql-editor u{text-decoration:underline}.ql-editor a,.ql-editor b,.ql-editor i,.ql-editor s,.ql-editor span,.ql-editor u{background-color:inherit}.ql-editor img{max-width:100%}.ql-editor blockquote,.ql-editor ol,.ql-editor ul{margin:0 0 0 2em;padding:0}.ql-editor ol{list-style-type:decimal}.ql-editor ul{list-style-type:disc}.ql-editor.ql-ie-10 br,.ql-editor.ql-ie-9 br{display:none}";
 },{}],32:[function(_dereq_,module,exports){
 var BaseTheme, _, baseStyles, dom;
 

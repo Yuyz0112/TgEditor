@@ -16,7 +16,7 @@
   display: block
 }
 body {
-  font-family: 'Microsoft Yahei', 'Helvetica', 'Arial', san-serif;
+  font-family: 'Microsoft Yahei', 'Helvetica', 'Arial', san-serif !important;
   font-size: 13px;
   padding: 25px;
   background-color: #d6dfec;
@@ -33,6 +33,23 @@ body {
 #formatting-container .ql-active, #formatting-container button:hover, #formatting-container span:hover {
   color: #23334e;
   font-weight: bold;
+}
+.ql-picker{
+  border: 1px solid #23334e;
+  box-shadow: 0 0 2px 2px #8492bd;
+}
+.ql-format-group button{
+  background: #acc0d6;
+  border: none;
+  box-shadow: none;
+}
+.ql-format-group button.ql-active{
+  background: #d6dfec;
+  border: 1px solid #23334e;
+  box-shadow: 0 0 2px 2px #8492bd;
+}
+.ql-clean{
+  font-size: 16px;
 }
 #editor-container {
   float: left;
